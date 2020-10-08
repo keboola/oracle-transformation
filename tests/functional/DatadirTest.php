@@ -9,6 +9,7 @@ use Keboola\OracleTransformation\Exception\UserException;
 
 class DatadirTest extends DatadirTestCase
 {
+    /** @var resource $dbConnection */
     private $dbConnection;
 
     protected function setUp(): void
@@ -20,10 +21,9 @@ class DatadirTest extends DatadirTestCase
         }
 
         $this->clearTables();
-
     }
 
-    private function getDbConnection()
+    private function getDbConnection(): void
     {
         $dbString = sprintf(
             '//%s:%s/%s',
@@ -73,7 +73,7 @@ class DatadirTest extends DatadirTestCase
         return sprintf('"%s"', mb_strtoupper($obj));
     }
 
-    private function clearTables()
+    private function clearTables(): void
     {
         $sql = <<<SQL
 SELECT TABLE_NAME, TABLESPACE_NAME, OWNER 
