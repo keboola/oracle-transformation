@@ -1,10 +1,21 @@
 {
-    "name": "keboola/my-component",
-    "description": "MyComponent description",
+    "name": "keboola/oracle-transformation",
+    "description": "Backend for Oracle Transformation",
+    "type": "project",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/keboola/sql-formatter"
+        }
+    ],
     "require": {
         "php": "^7.4",
-        "keboola/php-component": "^8.1"
+        "jdorn/sql-formatter": "dev-master",
+        "keboola/common-exceptions": "^1.1",
+        "keboola/php-component": "^8.1",
+        "keboola/storage-api-client": "^10.20",
+        "keboola/syrup-php-client": "^5.5"
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.2",
@@ -17,13 +28,13 @@
     },
     "autoload": {
         "psr-4": {
-            "MyComponent\\": "src/"
+            "Keboola\\OracleTransformation\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MyComponent\\Tests\\": "tests/phpunit/",
-            "MyComponent\\FunctionalTests\\": "tests/functional/"
+            "Keboola\\OracleTransformation\\Tests\\": "tests/phpunit/",
+            "Keboola\\OracleTransformation\\FunctionalTests\\": "tests/functional/"
         }
     },
     "scripts": {
