@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.4",
+        "ext-oci8": "^2.2",
         "jdorn/sql-formatter": "dev-master",
         "keboola/common-exceptions": "^1.1",
         "keboola/php-component": "^8.1",
@@ -18,10 +19,10 @@
         "keboola/syrup-php-client": "^5.5"
     },
     "require-dev": {
-        "php-parallel-lint/php-parallel-lint": "^1.2",
         "keboola/coding-standard": ">=7.0.2",
-        "keboola/datadir-tests": "^4.0",
+        "keboola/datadir-tests": "^5.2",
         "keboola/php-temp": "^2.0",
+        "php-parallel-lint/php-parallel-lint": "^1.2",
         "phpstan/phpstan": "^0.12.14",
         "phpunit/phpunit": "^9.0",
         "symfony/process": "^5.0"
