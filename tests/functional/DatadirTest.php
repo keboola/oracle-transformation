@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace OracleTransformation\FunctionalTests;
 
 use Keboola\DatadirTests\DatadirTestCase;
+use Keboola\OracleTransformation\Exception\ApplicationException;
 use Keboola\OracleTransformation\Exception\UserException;
 
 class DatadirTest extends DatadirTestCase
 {
-    /** @var resource $dbConnection */
+    /** @var resource|null $dbConnection */
     private $dbConnection;
 
     protected function setUp(): void
@@ -32,12 +33,24 @@ class DatadirTest extends DatadirTestCase
             getenv('ORACLE_DB_DATABASE')
         );
 
-        $this->dbConnection = oci_connect(getenv('ORACLE_DB_USER'), getenv('ORACLE_DB_PASSWORD'), $dbString);
+        $connection = oci_connect(
+            (string) getenv('ORACLE_DB_USER'),
+            (string) getenv('ORACLE_DB_PASSWORD'),
+            $dbString
+        );
+        if (!$connection) {
+            throw new ApplicationException(sprintf(
+                'Cannot connect to host "%s"',
+                getenv('ORACLE_DB_HOST')
+            ));
+        }
+
+        $this->dbConnection = $connection;
 
         if (getenv('ORACLE_DB_SCHEMA')) {
             $sql = sprintf(
                 'ALTER SESSION SET CURRENT_SCHEMA = %s',
-                $this->escape(getenv('ORACLE_DB_SCHEMA'))
+                $this->escape((string) getenv('ORACLE_DB_SCHEMA'))
             );
             $this->queryExecute($sql);
         }
@@ -45,6 +58,9 @@ class DatadirTest extends DatadirTestCase
 
     public function queryExecute(string $sql): void
     {
+        if (!$this->dbConnection) {
+            throw new ApplicationException('DB connection does not exists.');
+        }
         $stmt = oci_parse($this->dbConnection, $sql);
         if (!$stmt) {
             throw new UserException(sprintf('Cannot parse sql "%s"', $sql));
@@ -54,6 +70,9 @@ class DatadirTest extends DatadirTestCase
 
     public function fetchAll(string $sql): array
     {
+        if (!$this->dbConnection) {
+            throw new ApplicationException('DB connection does not exists.');
+        }
         $stmt = oci_parse($this->dbConnection, $sql);
         if (!$stmt) {
             throw new UserException(sprintf('Cannot parse sql "%s"', $sql));
