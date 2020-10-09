@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OracleTransformation\FunctionalTests;
+namespace Keboola\OracleTransformation\FunctionalTests;
 
 use Keboola\DatadirTests\DatadirTestCase;
 use Keboola\DatadirTests\DatadirTestSpecificationInterface;
