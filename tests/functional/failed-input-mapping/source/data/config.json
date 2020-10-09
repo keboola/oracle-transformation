@@ -1,0 +1,66 @@
+{
+  "parameters": {
+    "db": {
+      "host": "oj-oracle-test.cvkpp0ld53zd.us-east-1.rds.amazonaws.com",
+      "port": "1521",
+      "user": "admin",
+      "#password": "jodaond89",
+      "database": "ORCL",
+      "schema": "ADMIN"
+    },
+    "blocks": [
+      {
+        "name": "first block",
+        "codes": [
+          {
+            "name": "first code",
+            "script": [
+              "CREATE TABLE \"testout\" AS SELECT * FROM \"SIMPLE\"",
+              "UPDATE \"testout\" SET age = id"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "storage": {
+    "input": {
+      "tables": [
+        {
+          "destination": "simple",
+          "source": "in.c-main.unexists-table",
+          "column_types": {
+            "id": {
+              "type": "VARCHAR",
+              "source": "id",
+              "destination": "id",
+              "length": "255",
+              "convert_empty_values_to_null": true
+            },
+            "name": {
+              "type": "VARCHAR",
+              "source": "name",
+              "destination": "name",
+              "length": "255",
+              "convert_empty_values_to_null": true
+            },
+            "glasses": {
+              "type": "VARCHAR",
+              "source": "glasses",
+              "destination": "glasses",
+              "length": "255",
+              "convert_empty_values_to_null": true
+            },
+            "age": {
+              "type": "INTEGER",
+              "source": "age",
+              "destination": "age",
+              "length": "",
+              "convert_empty_values_to_null": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}
