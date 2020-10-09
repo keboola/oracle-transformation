@@ -127,6 +127,18 @@ SQL;
             $this->assertNotSame(0, $runProcess->getExitCode(), 'Exit code should have been non-zero');
         }
         if ($specification->getExpectedStdout() !== null) {
+            if ($runProcess->getExitCode() === 0) {
+                $this->assertStringContainsString(
+                    'Finished writer job ',
+                    trim($runProcess->getOutput()),
+                    'Failed asserting stdout output'
+                );
+                $this->assertStringContainsString(
+                    'Finished extractor job ',
+                    trim($runProcess->getOutput()),
+                    'Failed asserting stdout output'
+                );
+            }
             $this->assertStringContainsString(
                 trim($specification->getExpectedStdout()),
                 trim($runProcess->getOutput()),

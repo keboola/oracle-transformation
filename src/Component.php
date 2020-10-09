@@ -92,7 +92,7 @@ class Component extends BaseComponent
                     $job['result']['message'] ?? 'No message'
                 ));
             }
-            $this->getLogger()->info(sprintf('Writer job "%d" succeeded', $job['id']));
+            $this->getLogger()->info(sprintf('Finished writer job "%d"', $job['id']));
         }
     }
 
@@ -130,7 +130,7 @@ class Component extends BaseComponent
                     $job['result']['message'] ?? 'No message'
                 ));
             }
-            $this->getLogger()->info(sprintf('Extractor job "%d" succeeded', $job['id']));
+            $this->getLogger()->info(sprintf('Finished extractor job "%d" succeeded', $job['id']));
         }
     }
 
