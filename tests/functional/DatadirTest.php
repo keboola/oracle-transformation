@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace OracleTransformation\FunctionalTests;
 
 use Keboola\DatadirTests\DatadirTestCase;
+use Keboola\DatadirTests\DatadirTestSpecificationInterface;
 use Keboola\OracleTransformation\Exception\ApplicationException;
 use Keboola\OracleTransformation\Exception\UserException;
+use Symfony\Component\Process\Process;
 
 class DatadirTest extends DatadirTestCase
 {
@@ -111,6 +113,38 @@ SQL;
 DROP TABLE "%s"."%s"
 SQL;
             $this->queryExecute(sprintf($dropSql, $table['OWNER'], $table['TABLE_NAME']));
+        }
+    }
+
+    protected function assertMatchesSpecification(
+        DatadirTestSpecificationInterface $specification,
+        Process $runProcess,
+        string $tempDatadir
+    ): void {
+        if ($specification->getExpectedReturnCode() !== null) {
+            $this->assertProcessReturnCode($specification->getExpectedReturnCode(), $runProcess);
+        } else {
+            $this->assertNotSame(0, $runProcess->getExitCode(), 'Exit code should have been non-zero');
+        }
+        if ($specification->getExpectedStdout() !== null) {
+            $this->assertStringContainsString(
+                trim($specification->getExpectedStdout()),
+                trim($runProcess->getOutput()),
+                'Failed asserting stdout output'
+            );
+        }
+        if ($specification->getExpectedStderr() !== null) {
+            $this->assertStringMatchesFormat(
+                trim($specification->getExpectedStderr()),
+                trim($runProcess->getErrorOutput()),
+                'Failed asserting stderr output'
+            );
+        }
+        if ($specification->getExpectedOutDirectory() !== null) {
+            $this->assertDirectoryContentsSame(
+                $specification->getExpectedOutDirectory(),
+                $tempDatadir . '/out'
+            );
         }
     }
 }
