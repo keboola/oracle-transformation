@@ -1,0 +1,76 @@
+{
+  "parameters": {
+    "db": {
+      "host": "xxx",
+      "port": "xxx",
+      "user": "xxx",
+      "#password": "xxx",
+      "database": "xxx",
+      "schema": "xxx"
+    },
+    "blocks": [
+      {
+        "name": "first block",
+        "codes": [
+          {
+            "name": "first code",
+            "script": [
+              "",
+              "SELECT 1",
+              "select 1",
+              "# create table if not exists \"test\" (id int)"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "storage": {
+    "input": {
+      "tables": [
+        {
+          "destination": "simple",
+          "source": "in.c-main.simple",
+          "column_types": {
+            "id": {
+              "type": "VARCHAR",
+              "source": "id",
+              "destination": "id",
+              "length": "255",
+              "convert_empty_values_to_null": true
+            },
+            "name": {
+              "type": "VARCHAR",
+              "source": "name",
+              "destination": "name",
+              "length": "255",
+              "convert_empty_values_to_null": true
+            },
+            "glasses": {
+              "type": "VARCHAR",
+              "source": "glasses",
+              "destination": "glasses",
+              "length": "255",
+              "convert_empty_values_to_null": true
+            },
+            "age": {
+              "type": "INTEGER",
+              "source": "age",
+              "destination": "age",
+              "length": "",
+              "convert_empty_values_to_null": true
+            }
+          }
+        }
+      ]
+    },
+    "output": {
+      "tables": [
+        {
+          "destination": "out.c-test.test-out",
+          "source": "SIMPLE"
+        }
+      ]
+    }
+  }
+}
