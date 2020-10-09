@@ -1,0 +1,4 @@
+Processing block "first block".
+Processing code "first code".
+Running query "CREATE TABLE "testout" AS SELECT * FROM "SIMPLE"".
+Running query "UPDATE "testout" SET age = id".
