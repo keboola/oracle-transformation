@@ -8,7 +8,10 @@ services:
 before_script:
   - export APP_IMAGE=keboola-component
   - docker -v
-  - docker build -t $APP_IMAGE .
+  - docker build
+    --build-arg AWS_ACCESS_KEY_ID
+    --build-arg AWS_SECRET_ACCESS_KEY
+    -t $APP_IMAGE .
   - docker run
     -e KBC_TOKEN
     -e KBC_RUNID
