@@ -1,3 +1,9 @@
+FROM quay.io/keboola/aws-cli
+ARG AWS_SECRET_ACCESS_KEY
+ARG AWS_ACCESS_KEY_ID
+RUN /usr/bin/aws s3 cp s3://keboola-drivers/oracle-instantclient/instantclient-basiclite-linux.x64-12.2.0.1.0.zip /tmp/oracle-instantclient/instantclient-basiclite-linux.x64-12.2.0.1.0.zip
+RUN /usr/bin/aws s3 cp s3://keboola-drivers/oracle-instantclient/instantclient-sdk-linux.x64-12.2.0.1.0.zip /tmp/oracle-instantclient/instantclient-sdk-linux.x64-12.2.0.1.0.zip
+
 FROM php:7.4-cli
 
 ARG COMPOSER_FLAGS="--prefer-dist --no-interaction"
@@ -25,8 +31,8 @@ ENV LC_ALL=en_US.UTF-8
 # Oracle instantclient
 RUN mkdir /opt/oracle
 
-COPY docker/oracle/instantclient-basiclite-linux.x64-12.2.0.1.0.zip /opt/oracle/
-COPY docker/oracle/instantclient-sdk-linux.x64-12.2.0.1.0.zip /opt/oracle/
+COPY --from=0 /tmp/oracle-instantclient/instantclient-basiclite-linux.x64-12.2.0.1.0.zip /opt/oracle/
+COPY --from=0 /tmp/oracle-instantclient/instantclient-sdk-linux.x64-12.2.0.1.0.zip /opt/oracle/
 
 RUN unzip /opt/oracle/instantclient-basiclite-linux.x64-12.2.0.1.0.zip -d /opt/oracle \
     && unzip /opt/oracle/instantclient-sdk-linux.x64-12.2.0.1.0.zip -d /opt/oracle \
