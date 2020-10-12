@@ -26,38 +26,6 @@ class DatadirTest extends DatadirTestCase
         $this->clearTables();
     }
 
-    /**
-     * @dataProvider provideDatadirSpecifications
-     */
-    public function testDatadir(DatadirTestSpecificationInterface $specification): void
-    {
-        $tempDatadir = $this->getTempDatadir($specification);
-
-        $this->replacePartOfConfig($tempDatadir->getTmpFolder());
-
-        $process = $this->runScript($tempDatadir->getTmpFolder());
-
-        $this->assertMatchesSpecification($specification, $process, $tempDatadir->getTmpFolder());
-    }
-
-    private function replacePartOfConfig(string $tempDataDir): void
-    {
-        $configFile = $tempDataDir . '/config.json';
-        $config = json_decode((string) file_get_contents($configFile), true);
-        $config['parameters']['db'] = array_merge(
-            $config['parameters']['db'],
-            [
-                'host' => getenv('ORACLE_DB_HOST'),
-                'port' => getenv('ORACLE_DB_PORT'),
-                'user' => getenv('ORACLE_DB_USER'),
-                '#password' => getenv('ORACLE_DB_PASSWORD'),
-                'database' => getenv('ORACLE_DB_DATABASE'),
-                'schema' => getenv('ORACLE_DB_SCHEMA'),
-            ]
-        );
-        file_put_contents($configFile, json_encode($config));
-    }
-
     private function getDbConnection(): void
     {
         $dbString = sprintf(
