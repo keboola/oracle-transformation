@@ -1,0 +1,1 @@
+Extractor job failed with following message: "[out.c-test.test-out]: DB query failed: Export process failed: SQL Exception: ORA-00942: table or view does not exist   Tried 5 times."

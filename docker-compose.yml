@@ -1,7 +1,21 @@
 version: '3'
 services:
   dev:
-    build: .
+    build:
+      context: .
+      args:
+        - AWS_SECRET_ACCESS_KEY
+        - AWS_ACCESS_KEY_ID
     volumes:
       - ./:/code
       - ./data:/data
+    environment:
+      - KBC_TOKEN
+      - KBC_RUNID
+      - KBC_URL
+      - ORACLE_DB_HOST
+      - ORACLE_DB_PORT
+      - ORACLE_DB_USER
+      - ORACLE_DB_PASSWORD
+      - ORACLE_DB_DATABASE
+      - ORACLE_DB_SCHEMA
