@@ -1,6 +1,6 @@
 # Oracle transformation
 
-[![Build Status](https://travis-ci.com/keboola/snowflake-transformation.svg?branch=master)](https://travis-ci.com/keboola/snowflake-transformation)
+[![Build Status](https://travis-ci.com/keboola/oracle-transformation.svg?branch=master)](https://travis-ci.com/keboola/oracle-transformation)
 
 Application which runs KBC transformations
 
