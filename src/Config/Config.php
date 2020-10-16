@@ -43,7 +43,7 @@ class Config extends BaseConfig
 
     public function getDbPort(): string
     {
-        return $this->getValue(['parameters', 'db', 'port']);
+        return (string) $this->getValue(['parameters', 'db', 'port']);
     }
 
     public function getDbDatabase(): string
