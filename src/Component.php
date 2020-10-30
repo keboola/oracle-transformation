@@ -8,6 +8,7 @@ use Keboola\Component\BaseComponent;
 use Keboola\Component\Logger;
 use Keboola\OracleTransformation\Config\Config;
 use Keboola\OracleTransformation\Config\ConfigDefinition;
+use Keboola\OracleTransformation\Config\TestConnectionConfigDefinition;
 use Keboola\OracleTransformation\Exception\ApplicationException;
 use Keboola\OracleTransformation\Exception\UserException;
 use Keboola\Syrup\Client as SyrupClient;
@@ -18,6 +19,10 @@ class Component extends BaseComponent
     private const ORACLE_WRITER_COMPONENT_NAME = 'keboola.wr-db-oracle';
 
     private const ORACLE_EXTRACTOR_COMPONENT_NAME = 'keboola.ex-db-oracle';
+
+    private const ACTION_RUN = 'run';
+
+    private const ACTION_TEST_CONNECTION = 'testConnection';
 
     private ?array $services = null;
 
@@ -35,6 +40,24 @@ class Component extends BaseComponent
         $this->runExtractorJob();
     }
 
+    public function testConnection(): array
+    {
+        $databaseAdapter = new DatabaseAdapter($this->getAppConfig(), $this->getLogger());
+        $databaseAdapter->createConnection();
+        $databaseAdapter->queryExecute('SELECT CURRENT_DATE FROM dual');
+
+        return [
+            'status' => 'success',
+        ];
+    }
+
+    protected function getSyncActions(): array
+    {
+        return [
+            self::ACTION_TEST_CONNECTION => 'testConnection',
+        ];
+    }
+
     protected function getConfigClass(): string
     {
         return Config::class;
@@ -42,7 +65,15 @@ class Component extends BaseComponent
 
     protected function getConfigDefinitionClass(): string
     {
-        return ConfigDefinition::class;
+        $action = $this->getRawConfig()['action'] ?? self::ACTION_RUN;
+        switch ($action) {
+            case self::ACTION_RUN:
+                return ConfigDefinition::class;
+            case self::ACTION_TEST_CONNECTION:
+                return TestConnectionConfigDefinition::class;
+            default:
+                throw new UserException(sprintf('Unexpected action "%s"', $action));
+        }
     }
 
     private function runWriterJob(): void
