@@ -55,6 +55,8 @@ class OracleTransformation
     {
         $uncommentedQuery = SqlFormatter::removeComments($script->getSql(), false);
 
+        $uncommentedQuery = trim($uncommentedQuery, ';');
+
         // Do not execute empty queries
         if (strlen(trim($uncommentedQuery)) === 0) {
             return;
