@@ -37,28 +37,28 @@
               "source": "id",
               "destination": "id",
               "length": "255",
-              "convert_empty_values_to_null": true
+              "nullable": true
             },
             "name": {
               "type": "VARCHAR",
               "source": "name",
               "destination": "name",
               "length": "255",
-              "convert_empty_values_to_null": true
+              "nullable": true
             },
             "glasses": {
               "type": "VARCHAR",
               "source": "glasses",
               "destination": "glasses",
               "length": "255",
-              "convert_empty_values_to_null": true
+              "nullable": true
             },
             "age": {
               "type": "INTEGER",
               "source": "age",
               "destination": "age",
               "length": "",
-              "convert_empty_values_to_null": true
+              "nullable": true
             }
           }
         }
