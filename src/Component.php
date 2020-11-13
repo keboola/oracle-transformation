@@ -87,7 +87,7 @@ class Component extends BaseComponent
                     'name' => $item['source'],
                     'dbName' => $item['destination'],
                     'type' => $item['type'],
-                    'nullable' => $item['convert_empty_values_to_null'],
+                    'nullable' => $item['nullable'],
                     'size' => $item['length'],
                 ];
             }
