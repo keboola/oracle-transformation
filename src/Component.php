@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Keboola\OracleTransformation;
 
+use Keboola\OracleTransformation\JobRunner\JobRunnerFactory;
 use Keboola\Component\BaseComponent;
-use Keboola\Component\Logger;
 use Keboola\OracleTransformation\Config\Config;
 use Keboola\OracleTransformation\Config\ConfigDefinition;
 use Keboola\OracleTransformation\Config\TestConnectionConfigDefinition;
-use Keboola\OracleTransformation\Exception\ApplicationException;
 use Keboola\OracleTransformation\Exception\UserException;
-use Keboola\Syrup\Client as SyrupClient;
-use Keboola\StorageApi\Client as StorageApiClient;
+use Keboola\StorageApi\Client;
 
 class Component extends BaseComponent
 {
@@ -24,14 +22,11 @@ class Component extends BaseComponent
 
     private const ACTION_TEST_CONNECTION = 'testConnection';
 
-    private ?array $services = null;
-
     protected function run(): void
     {
         $this->runWriterJob();
 
         $transformation = new OracleTransformation(
-            $this->getAppConfig(),
             $this->getLogger(),
             new DatabaseAdapter($this->getAppConfig(), $this->getLogger())
         );
@@ -78,8 +73,7 @@ class Component extends BaseComponent
 
     private function runWriterJob(): void
     {
-        $syrupClient = $this->getSyrupClient();
-
+        $jobRunnerFactory = JobRunnerFactory::create($this->createStorageClient(), $this->getLogger());
         foreach ($this->getAppConfig()->getInputTables() as $inputTable) {
             $columns = [];
             foreach ($inputTable['column_types'] as $item) {
@@ -91,21 +85,19 @@ class Component extends BaseComponent
                     'size' => $item['length'],
                 ];
             }
-            $job = $syrupClient->runJob(
+            $job = $jobRunnerFactory->runJob(
                 self::ORACLE_WRITER_COMPONENT_NAME,
                 [
-                    'configData' => [
-                        'parameters' => [
-                            'db' => $this->getDbParameters(true),
-                            'export' => true,
-                            'tableId' => $inputTable['source'],
-                            'dbName' => $inputTable['destination'],
-                            'items' => $columns,
-                        ],
-                        'storage' => [
-                            'input' => [
-                                'tables' => [$inputTable],
-                            ],
+                    'parameters' => [
+                        'db' => $this->getDbParameters(true),
+                        'export' => true,
+                        'tableId' => $inputTable['source'],
+                        'dbName' => $inputTable['destination'],
+                        'items' => $columns,
+                    ],
+                    'storage' => [
+                        'input' => [
+                            'tables' => [$inputTable],
                         ],
                     ],
                 ]
@@ -129,22 +121,20 @@ class Component extends BaseComponent
 
     private function runExtractorJob(): void
     {
-        $syrupClient = $this->getSyrupClient();
+        $jobRunnerFactory = JobRunnerFactory::create($this->createStorageClient(), $this->getLogger());
         foreach ($this->getAppConfig()->getExpectedOutputTables() as $outputTable) {
-            $job = $syrupClient->runJob(
+            $job = $jobRunnerFactory->runJob(
                 self::ORACLE_EXTRACTOR_COMPONENT_NAME,
                 [
-                    'configData' => [
-                        'parameters' => [
-                            'db' => $this->getDbParameters(),
-                            'id' => 1,
-                            'name' => $outputTable['source'],
-                            'table' => [
-                                'schema' => $this->getAppConfig()->getDbSchema(),
-                                'tableName' => $outputTable['source'],
-                            ],
-                            'outputTable' => $outputTable['destination'],
+                    'parameters' => [
+                        'db' => $this->getDbParameters(),
+                        'id' => 1,
+                        'name' => $outputTable['source'],
+                        'table' => [
+                            'schema' => $this->getAppConfig()->getDbSchema(),
+                            'tableName' => $outputTable['source'],
                         ],
+                        'outputTable' => $outputTable['destination'],
                     ],
                 ]
             );
@@ -165,44 +155,14 @@ class Component extends BaseComponent
         }
     }
 
-    private function getSyrupClient(): SyrupClient
+    private function createStorageClient(): Client
     {
-        $config = [
+        $client = new Client([
             'token' => $this->getAppConfig()->getStorageApiToken(),
-            'url' => $this->getSyrupUrl(),
-            'super' => 'docker',
-            'runId' => $this->getAppConfig()->getRunId(),
-        ];
-
-        return new SyrupClient($config);
-    }
-
-    private function getSyrupUrl(): string
-    {
-        return $this->getServiceUrl('syrup');
-    }
-
-    private function getServiceUrl(string $serviceId): string
-    {
-        $foundServices = array_values(array_filter($this->getServices(), function ($service) use ($serviceId) {
-            return $service['id'] === $serviceId;
-        }));
-        if (empty($foundServices)) {
-            throw new ApplicationException(sprintf('%s service not found', $serviceId));
-        }
-        return $foundServices[0]['url'];
-    }
-
-    private function getServices(): array
-    {
-        if (!$this->services) {
-            $storageClient = new StorageApiClient([
-                'token' => $this->getAppConfig()->getStorageApiToken(),
-                'url' => $this->getAppConfig()->getStorageApiUrl(),
-            ]);
-            $this->services = $storageClient->indexAction()['services'];
-        }
-        return $this->services;
+            'url' => $this->getAppConfig()->getStorageApiUrl(),
+        ]);
+        $client->setRunId($this->getAppConfig()->getRunId());
+        return $client;
     }
 
     private function getAppConfig(): Config
@@ -210,13 +170,6 @@ class Component extends BaseComponent
         /** @var Config $config */
         $config = $this->getConfig();
         return $config;
-    }
-
-    public function getLogger(): Logger
-    {
-        /** @var Logger $logger */
-        $logger = parent::getLogger();
-        return $logger;
     }
 
     private function getDbParameters(bool $schema = false): array

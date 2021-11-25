@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Keboola\OracleTransformation;
 
-use Keboola\Component\Logger;
 use Keboola\OracleTransformation\Config\Config;
 use Keboola\OracleTransformation\Exception\UserException;
+use Psr\Log\LoggerInterface;
 
 class DatabaseAdapter
 {
     private Config $config;
 
-    private Logger $logger;
+    private LoggerInterface $logger;
 
     /** @var resource */
     private $connection;
 
-    public function __construct(Config $config, Logger $logger)
+    public function __construct(Config $config, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->logger = $logger;
