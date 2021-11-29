@@ -6,6 +6,7 @@ namespace Keboola\OracleTransformation\JobRunner;
 
 use Exception;
 use Keboola\StorageApi\Client;
+use Keboola\StorageApi\Options\IndexOptions;
 use Psr\Log\LoggerInterface;
 
 abstract class JobRunner
@@ -37,6 +38,9 @@ abstract class JobRunner
 
     private function getServices(): array
     {
+        $options = new IndexOptions();
+        $options->setExclude(['components']);
+
         if (!$this->services) {
             $this->services = $this->storageApiClient->indexAction()['services'];
         }
