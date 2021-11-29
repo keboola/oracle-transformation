@@ -17,7 +17,7 @@
         "keboola/common-exceptions": "^1.1",
         "keboola/job-queue-api-php-client": "^0.4.1",
         "keboola/php-component": "^8.1",
-        "keboola/storage-api-client": "^10.20",
+        "keboola/storage-api-client": "^12.7",
         "keboola/syrup-php-client": "^5.5",
         "symfony/config": "^5.3"
     },
