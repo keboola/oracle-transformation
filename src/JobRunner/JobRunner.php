@@ -25,7 +25,7 @@ abstract class JobRunner
 
     abstract public function runJob(string $componentId, array $data): array;
 
-    protected function getServiceUrl(string $serviceId): string
+    public function getServiceUrl(string $serviceId): string
     {
         $foundServices = array_values(array_filter($this->getServices(), function ($service) use ($serviceId) {
             return $service['id'] === $serviceId;
