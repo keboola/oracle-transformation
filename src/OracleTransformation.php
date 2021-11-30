@@ -4,26 +4,22 @@ declare(strict_types=1);
 
 namespace Keboola\OracleTransformation;
 
-use Keboola\Component\Logger;
 use Keboola\OracleTransformation\Config\Block;
 use Keboola\OracleTransformation\Config\Code;
-use Keboola\OracleTransformation\Config\Config;
 use Keboola\OracleTransformation\Config\Script;
 use Keboola\OracleTransformation\Exception\UserException;
-use \SqlFormatter;
-use \Throwable;
+use Psr\Log\LoggerInterface;
+use SqlFormatter;
+use Throwable;
 
 class OracleTransformation
 {
-    private Config $config;
-
-    private Logger $logger;
+    private LoggerInterface $logger;
 
     private DatabaseAdapter $databaseAdapter;
 
-    public function __construct(Config $config, Logger $logger, DatabaseAdapter $databaseAdapter)
+    public function __construct(LoggerInterface $logger, DatabaseAdapter $databaseAdapter)
     {
-        $this->config = $config;
         $this->logger = $logger;
         $this->databaseAdapter = $databaseAdapter->createConnection();
     }
