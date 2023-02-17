@@ -16,7 +16,7 @@ env:
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   # Oracle database credentials
-  ORACLE_DB_HOST: "ci-oracle-transformation.cvkpp0ld53zd.us-east-1.rds.amazonaws.com"
+  ORACLE_DB_HOST: "ci-oracle-transformation.cljgkyrv8n5b.us-east-1.rds.amazonaws.com"
   ORACLE_DB_PORT: 1521
   ORACLE_DB_USER: "admin"
   ORACLE_DB_PASSWORD: ${{ secrets.ORACLE_DB_PASSWORD }}
