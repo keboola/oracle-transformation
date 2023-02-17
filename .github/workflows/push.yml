@@ -16,7 +16,7 @@ env:
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   # Oracle database credentials
-  ORACLE_DB_HOST: "ci-oracle-transformation.cvkpp0ld53zd.us-east-1.rds.amazonaws.com"
+  ORACLE_DB_HOST: "ci-oracle-transformation.cljgkyrv8n5b.us-east-1.rds.amazonaws.com"
   ORACLE_DB_PORT: 1521
   ORACLE_DB_USER: "admin"
   ORACLE_DB_PASSWORD: ${{ secrets.ORACLE_DB_PASSWORD }}
@@ -31,7 +31,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      AWS_ACCESS_KEY_ID: "AKIAQ4QRYXTAAIOX75O5"
+      AWS_ACCESS_KEY_ID: "AKIATDSWT524UALCC2TV"
       AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     outputs:
       app_image_tag: ${{ steps.tag.outputs.app_image_tag }}
