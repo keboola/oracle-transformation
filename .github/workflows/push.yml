@@ -31,7 +31,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      AWS_ACCESS_KEY_ID: "AKIAQ4QRYXTAAIOX75O5"
+      AWS_ACCESS_KEY_ID: "AKIATDSWT524UALCC2TV"
       AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     outputs:
       app_image_tag: ${{ steps.tag.outputs.app_image_tag }}
